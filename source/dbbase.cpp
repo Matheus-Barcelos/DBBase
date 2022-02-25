@@ -45,19 +45,29 @@ QSharedPointer<DBBase> DBBase::getInstance()
     return DBBase::singleton;
 }
 
+QList<QSqlRecord> DBBase::query(QString queryString)
+{
+    QSqlQuery query(queryString, this->database);
+    query.exec();
+
+    QList<QSqlRecord> list;
+    while(query.next())
+    {
+        list.append(query.record());
+    }
+    return list;
+}
+
 
 QStringList DBBase::getTables()
 {
-    QSqlQuery query("show tables", this->database);
-    query.exec();
-
-    QStringList list;
-    while(query.next())
+    QList<QSqlRecord> list = this->query("show tables");
+    QStringList result;
+    for(QSqlRecord& record : list)
     {
-        QSqlRecord record = query.record();
-        list.append(record.value(0).toString());
+        result.append(record.value(0).toString());
     }
-    return list;
+    return result;
 }
 
 

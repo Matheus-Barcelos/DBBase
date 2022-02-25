@@ -19,6 +19,7 @@ public:
 
 private:
     DBBase(QString driver, QString host, QString database, int port, QString user, QString passwd);
+    QList<QSqlRecord> query(QString queryString);
     QSqlDatabase database;
 
     static QSharedPointer<DBBase> singleton;
